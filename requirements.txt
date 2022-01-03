@@ -1,0 +1,11 @@
+###### Requirements without Version Specifiers ######
+pandas
+os
+numpy
+discord
+matplotlib
+dotenv
+seaborn
+requests
+time
+random
