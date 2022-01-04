@@ -32,7 +32,7 @@ def rarityScoring(asset_data, slug):
     #assets_sorted = sorted(asset_rarities, key=lambda asset: asset['rarity']) 
     return asset_rarities
 
-def priceRarityGraph(asset_df, asset_rarities, slug):
+def priceRarityGraph(asset_df, asset_rarities, slug, floor):
     """
     Output: Price to rarity graph.
     """
@@ -48,9 +48,10 @@ def priceRarityGraph(asset_df, asset_rarities, slug):
 
     result = pd.merge(priced_aped_df, all_apes_df, on="id")
     filtered_result = result[result['price'] < np.median(list(result['price']))]
+    nonfloor_filtered_result = filtered_result[filtered_result['price'] >= floor]
 
     plt.figure(figsize=(16,12))
-    sns.scatterplot(data=filtered_result, x='price', y='rarity')
+    sns.scatterplot(data=nonfloor_filtered_result, x='price', y='rarity')
     plt.title(f"Price to Rarity Scores of {slug}", fontsize = 16) #title
     plt.xlabel("Price", fontsize = 13) #x label
     plt.ylabel("Rarity", fontsize = 13) #y label

@@ -64,7 +64,7 @@ async def on_message(message):
             
             ### PRICERARITYGRAPH
             asset_rarities = rarityScoring(asset_data, slug)
-            priceRarityGraph(asset_df, asset_rarities, slug)
+            priceRarityGraph(asset_df, asset_rarities, slug, floor)
             await message.channel.send(file=discord.File('current_plot.jpg'))
 
             await message.channel.send(f"Note, if you want to understand these metrics, type **!help**")
