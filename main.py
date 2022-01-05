@@ -48,11 +48,11 @@ async def on_message(message):
                 await message.channel.send(f"{i}, {j} \n")
             total_tokens = int(collection_df['total_supply'])
             await message.channel.send(f"**Gathering asset data for {slug}.**")
-            if total_tokens < 10000:
+            if total_tokens <= 10000:
                 await message.channel.send(f"There are {total_tokens} assets to query. This won't take too long.")
-            elif total_tokens > 10000 and total_tokens < 20000:
+            elif 10000 < total_tokens <= 20000:
                 await message.channel.send(f"There are {total_tokens} assets to query. This will take 5-10 minutes.")
-            elif total_tokens > 20000 and total_tokens < 50000:
+            elif 20000 < total_tokens <= 50000:
                 await message.channel.send(f"There are {total_tokens} assets to query. This will take 10-20 minutes.")
             else:
                 await message.channel.send(f"There are {total_tokens} assets to query. This is a lot of assets. This will take a while.")
