@@ -39,13 +39,24 @@ async def on_message(message):
         ### GATHER DATA
         await message.channel.send(f"**Gathering collection data for {slug}.**")
         collection_df = collectionStatsQuery(slug)
-        if not collection_df.empty:
+        if collection_df.empty:
+            await message.channel.send(f"{slug} Not found on OpenSea.")
+        else:
             await message.channel.send(f"Link to collection: https://opensea.io/collection/{slug}")
             await message.channel.send(f"Collection details: \n")
             for i, j in collection_df.iterrows():
                 await message.channel.send(f"{i}, {j} \n")
+            total_tokens = int(collection_df['total_supply'])
             await message.channel.send(f"**Gathering asset data for {slug}.**")
-            asset_df, asset_data = getOneAssetData(slug, int(collection_df['total_supply']))
+            if total_tokens < 10000:
+                await message.channel.send("There are {total_tokens} assets to query. This won't take too long.")
+            elif total_tokens > 10000 and total_tokens < 20000:
+                await message.channel.send("There are {total_tokens} assets to query. This will take 5-10 minutes.")
+            elif total_tokens > 20000 and total_tokens < 50000:
+                await message.channel.send("There are {total_tokens} assets to query. This will take 10-20 minutes.")
+            else:
+                await message.channel.send("There are {total_tokens} assets to query. This is a lot of assets. This will take a while.")
+            asset_df, asset_data = getOneAssetData(slug, total_tokens)
 
             ### CALCULATE FLOOR
             floor = float(collection_df[collection_df['collection_name'] == slug]['floor_price'])
@@ -68,9 +79,7 @@ async def on_message(message):
             await message.channel.send(file=discord.File('current_plot.jpg'))
 
             await message.channel.send(f"Note, if you want to understand these metrics, type **!help**")
-
-        else:
-            await message.channel.send(f"{slug} Not found on OpenSea.")
+            
     
     elif msg.startswith('!help'):
         await message.channel.send("***KPI info:*** \n\

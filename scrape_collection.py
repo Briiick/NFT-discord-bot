@@ -21,7 +21,6 @@ def collectionStatsQuery(slug):
 
     try:
         url = f"https://api.opensea.io/api/v1/collection/{slug}/stats"
-        time.sleep(random.uniform(1, 2))
 
         r = requests.get(url, headers=headers)
 
@@ -30,25 +29,12 @@ def collectionStatsQuery(slug):
         collection_data.append(labelled_output)
 
         cols = ['collection_name'] + list(r.json()["stats"].keys())
-        
-    except KeyError:
-        # deal with throttle by waiting
-        print(r.json())
-        time.sleep(10)
-        url = f"https://api.opensea.io/api/v1/collection/{slug}/stats"
-        time.sleep(random.uniform(1, 2))
-
-        r = requests.get(url, headers=headers)
-
-        output = list(r.json()["stats"].values())
-        labelled_output = [slug] + output
-        collection_data.append(labelled_output)
-
-        cols = ['slug'] + list(r.json()["stats"].keys())
 
     except:
         # store collection name and come back later
         print(f"JSON error for: {slug}")
+        empty_df = pd.DataFrame()
+        return empty_df
 
     collection_df = pd.DataFrame(collection_data, columns=cols)
     # store as pickle

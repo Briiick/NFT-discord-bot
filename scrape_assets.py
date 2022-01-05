@@ -106,7 +106,7 @@ def getOneAssetData(slug, total_supply):
             break
 
         # if you want to add a delay in case you get throttled
-        time.sleep(0.8)
+        time.sleep(0.2)
 
     ### ADD IN BIT FOR GOING OVER 10000
     if total_supply > 10000:
@@ -185,7 +185,8 @@ def getOneAssetData(slug, total_supply):
 
             # append lists to dataframe
             df_store = pd.concat([df_store, temp_df])
-                  
+
+            time.sleep(0.2)
 
     # store dataframe
     if os.path.exists("data/%s.pkl" % slug):
