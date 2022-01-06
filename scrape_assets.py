@@ -188,12 +188,4 @@ def getOneAssetData(slug, total_supply):
 
             time.sleep(0.2)
 
-    # store dataframe
-    if os.path.exists("data/%s.pkl" % slug):
-        # delete previous
-        os.remove("data/%s.pkl" % slug)
-        df_store.to_pickle("data/%s.pkl" % slug)
-    else:
-        df_store.to_pickle("data/%s.pkl" % slug)
-
     return df_store, asset_data

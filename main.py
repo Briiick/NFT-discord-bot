@@ -63,15 +63,15 @@ async def on_message(message):
             
             ### FLOOR DEPTH
             floor_depth = floorDepthCalc(floor, asset_df)
-            await message.channel.send(f"Floor Depth for {slug} = {floor_depth} items")
+            await message.channel.send(f"{slug} floor depth = {floor_depth} items")
 
             ### PASSION INTENSITY
             passion_intensity = passionIntensityCalc(floor, asset_df)
-            await message.channel.send(f"Floor > Previous for {slug} = {passion_intensity}%")
+            await message.channel.send(f"**{slug} owners in the money = {passion_intensity}%**")
 
             ### SENTIMENT SCORE
             sentiment_score = sentimentScoreCalc(floor, asset_df)
-            await message.channel.send(f"Current > Previous for {slug} = {sentiment_score}%")
+            await message.channel.send(f"{slug} items priced at a gain = {sentiment_score}%")
             
             ### PRICERARITYGRAPH
             asset_rarities = rarityScoring(asset_data, slug)
@@ -85,8 +85,8 @@ async def on_message(message):
         await message.channel.send("***KPI info:*** \n\
 **Floor Depth:** The number of items currently listed at a price below 1.5x the current floor  (i.e. how many floor items traded it would take to raise the floor price by 50%). This KPI indicates how much upward price resistance exists for a given collection – the thinner the floor, the easier the upward motion. \n\
 \n\
-**Floor > Previous:** The percentage of items currently listed for sale that would make money if listed at the current floor price (i.e. the floor price of the collection is higher than the item’s last traded price). This KPI indicates conviction – how many people are selling off their NFTs now that they have made money vs. holding for future. The higher the percentage, the less conviction. \n\
+**Owners in the money:** The percentage of items currently listed for sale that would make money if listed at the current floor price (i.e. the floor price of the collection is higher than the item’s last traded price). This KPI indicates conviction – how many people are selling off their NFTs now that they have made money vs. holding for future. The higher the percentage, the less conviction. \n\
 \n\
-**Current > Previous:** The percentage of items currently listed for sale that are priced at a gain (i.e. the list price of an item is higher than its last traded price). This KPI indicates the market’s current feelings about a collection – the higher the score, the more optimistic holders may be about being able to turn a profit.")
+**Priced at a gain:** The percentage of items currently listed for sale that are priced at a gain (i.e. the list price of an item is higher than its last traded price). This KPI indicates the market’s current feelings about a collection – the higher the score, the more optimistic holders may be about being able to turn a profit.")
 
 client.run(os.getenv('TOKEN'))

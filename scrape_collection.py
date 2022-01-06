@@ -37,6 +37,4 @@ def collectionStatsQuery(slug):
         return empty_df
 
     collection_df = pd.DataFrame(collection_data, columns=cols)
-    # store as pickle
-    collection_df.to_pickle("data/collection_stats.pkl")
     return collection_df
