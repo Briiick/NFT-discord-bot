@@ -63,7 +63,7 @@ async def on_message(message):
             
             ### FLOOR DEPTH
             floor_depth = floorDepthCalc(floor, asset_df)
-            await message.channel.send(f"{slug} floor depth = {floor_depth} items")
+            await message.channel.send(f"**{slug} floor depth = {floor_depth} items**")
 
             ### PASSION INTENSITY
             passion_intensity = passionIntensityCalc(floor, asset_df)
@@ -71,12 +71,12 @@ async def on_message(message):
 
             ### SENTIMENT SCORE
             sentiment_score = sentimentScoreCalc(floor, asset_df)
-            await message.channel.send(f"{slug} items priced at a gain = {sentiment_score}%")
+            await message.channel.send(f"**{slug} items priced at a gain = {sentiment_score}%**")
             
             ### PRICERARITYGRAPH
             asset_rarities = rarityScoring(asset_data, slug)
             priceRarityGraph(asset_df, asset_rarities, slug, floor)
-            await message.channel.send(file=discord.File('current_plot.jpg'))
+            await message.channel.send(file=discord.File('current_plot.png'))
 
             await message.channel.send(f"Note, if you want to understand these metrics, type **!help**")
             

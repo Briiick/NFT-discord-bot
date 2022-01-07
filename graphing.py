@@ -50,12 +50,27 @@ def priceRarityGraph(asset_df, asset_rarities, slug, floor):
     filtered_result = result[result['price'] < np.median(list(result['price']))]
     nonfloor_filtered_result = filtered_result[filtered_result['price'] >= floor]
 
-    plt.figure(figsize=(16,12))
-    sns.scatterplot(data=nonfloor_filtered_result, x='price', y='rarity')
-    plt.title(f"Price to Rarity Scores of {slug}", fontsize = 16) #title
-    plt.xlabel("Price", fontsize = 13) #x label
-    plt.ylabel("Rarity", fontsize = 13) #y label
-    plt.savefig("current_plot.jpg")
+    # plot
+    fig = plt.figure(figsize=(24,16))
+    ax = fig.add_subplot(111)
+    ax = sns.lmplot(data=nonfloor_filtered_result,
+                    x='price',
+                    y='rarity',
+                    fit_reg=True,
+                    height= 8,
+                    aspect= 2 )
+
+    plt.suptitle(f"Price to Rarity Scores of {slug}", fontsize=18) #title
+    ax.set(xlabel='Price', ylabel='Rarity Score')
+
+    def label_point(x, y, val, ax):
+        a = pd.concat({'x': x, 'y': y, 'val': val}, axis=1)
+        for i, point in a.iterrows():
+            ax.text(point['x']+.02, point['y'], str(point['val']))
+
+    label_point(nonfloor_filtered_result["price"], nonfloor_filtered_result["rarity"], nonfloor_filtered_result["id"], plt.gca())  
+    plt.tight_layout() # Add space at top
+    plt.savefig("current_plot.png")
     plt.close()
 
     return
