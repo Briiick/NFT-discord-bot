@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 # sys.path.append('../')
 # sns.set()
 # np.set_printoptions(suppress=True)
-load_dotenv()
+load_dotenv(".env")
 # environment variables
 
 # set up discord client
@@ -89,4 +89,4 @@ async def on_message(message):
 \n\
 **Priced at a gain:** The percentage of items currently listed for sale that are priced at a gain (i.e. the list price of an item is higher than its last traded price). This KPI indicates the market’s current feelings about a collection – the higher the score, the more optimistic holders may be about being able to turn a profit.")
 
-client.run(os.getenv('TOKEN'))
+client.run(os.getenv("TOKEN"))
