@@ -5,14 +5,6 @@ import requests
 import time
 import numpy as np
 from dotenv import load_dotenv
-import logging
-
-# SET UP LOGGER
-logger = logging.getLogger('discord')
-logger.setLevel(logging.ERROR)
-handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
-logger.addHandler(handler)
 
 load_dotenv()
 
