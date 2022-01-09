@@ -14,7 +14,7 @@ def passionIntensityCalc(floor, asset_df):
     """
     passionate_items = asset_df[asset_df['Previous Price'] < floor]
     passionate_items = passionate_items[passionate_items['Current Price'] >= floor]
-    passionate_score = round(((len(passionate_items) / len(asset_df)) * 100), 4) 
+    passionate_score = round(((len(passionate_items) / len(asset_df)) * 100), 2) 
     return passionate_score
 
 def sentimentScoreCalc(floor, asset_df):
@@ -23,5 +23,5 @@ def sentimentScoreCalc(floor, asset_df):
     """
     sentiment_items = asset_df[asset_df['Current Price'] > asset_df['Previous Price']]
     sentiment_items = sentiment_items[sentiment_items['Current Price'] >= floor]
-    sentiment_score = round(((len(sentiment_items) / len(asset_df)) * 100), 4) 
+    sentiment_score = round(((len(sentiment_items) / len(asset_df)) * 100), 2) 
     return sentiment_score
