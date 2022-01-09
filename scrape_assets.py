@@ -5,6 +5,14 @@ import requests
 import time
 import numpy as np
 from dotenv import load_dotenv
+import logging
+
+# SET UP LOGGER
+logger = logging.getLogger('discord')
+logger.setLevel(logging.ERROR)
+handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
 load_dotenv()
 
@@ -106,7 +114,7 @@ def getOneAssetData(slug, total_supply):
             break
 
         # if you want to add a delay in case you get throttled
-        time.sleep(0.2)
+        time.sleep(0.3)
 
     ### ADD IN BIT FOR GOING OVER 10000
     if total_supply > 10000:
