@@ -16,8 +16,9 @@ def rarityScoring(asset_data, slug):
         asset_rarity = 1
 
         for trait in asset['traits']:
-            trait_rarity = trait['trait_count'] / 8888
-            asset_rarity *= trait_rarity
+            
+            trait_rarity = 1 / (trait['trait_count'] / len(asset_data['assets']))
+            asset_rarity += trait_rarity
 
         asset_rarities.append({
             'token_id': asset['token_id'],
