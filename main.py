@@ -5,7 +5,7 @@ import numpy as np
 import discord
 from scrape_assets import getOneAssetData
 from scrape_collection import collectionStatsQuery
-from kpi_calculations import floorDepthCalc, passionIntensityCalc, sentimentScoreCalc
+from kpi_calculations import floorDepthCalc, inTheMoney, pricedAtGain, plotFloorDepth
 from graphing import rarityScoring, priceRarityGraph
 import matplotlib.pyplot as plt
 from dotenv import load_dotenv
@@ -70,28 +70,32 @@ async def on_message(message):
             floor = float(collection_df[collection_df['collection_name'] == slug]['floor_price'])
             
             ### FLOOR DEPTH
-            floor_depth = floorDepthCalc(floor, asset_df)
-            await message.channel.send(f"**{slug} floor depth = {floor_depth} items**")
+            floor_val_arr, floor_depth_arr = floorDepthCalc(floor, asset_df)
+            plotFloorDepth(floor_val_arr, floor_depth_arr, slug)
+            await message.channel.send(file=discord.File('floor_depth_chart.png'))
 
             ### PASSION INTENSITY
-            passion_intensity = passionIntensityCalc(floor, asset_df)
+            passion_intensity = inTheMoney(floor, asset_df)
             await message.channel.send(f"**{slug} owners in the money = {passion_intensity}%**")
 
             ### SENTIMENT SCORE
-            sentiment_score = sentimentScoreCalc(floor, asset_df)
+            sentiment_score = pricedAtGain(floor, asset_df)
             await message.channel.send(f"**{slug} items priced at a gain = {sentiment_score}%**")
             
             ### PRICERARITYGRAPH
             asset_rarities = rarityScoring(asset_data, slug)
             priceRarityGraph(asset_df, asset_rarities, slug, floor)
-            await message.channel.send(file=discord.File('current_plot.png'))
+            await message.channel.send(file=discord.File('price_rarity_plot.png'))
 
             await message.channel.send(f"Note, if you want to understand these metrics, type **!help**")
             
     
     elif msg.startswith('!help'):
-        await message.channel.send("***KPI info:*** \n\
-**Floor Depth:** The number of items currently listed at a price below 1.5x the current floor  (i.e. how many floor items traded it would take to raise the floor price by 50%). This KPI indicates how much upward price resistance exists for a given collection – the thinner the floor, the easier the upward motion. \n\
+        await message.channel.send("***Commands:*** \n\
+Type !scan <end of OpenSea URL> to get started. \n\
+\n\
+***KPI info:*** \n\
+**Floor Depth:** The number of items currently listed at a price below X and the current floor  (i.e. how many floor items traded it would take to raise the floor price by X%). This KPI indicates how much upward price resistance exists for a given collection – the thinner the floor, the easier the upward motion. \n\
 \n\
 **Owners in the money:** The percentage of items currently listed for sale that would make money if listed at the current floor price (i.e. the floor price of the collection is higher than the item’s last traded price). This KPI indicates conviction – how many people are selling off their NFTs now that they have made money vs. holding for future. The higher the percentage, the less conviction. \n\
 \n\

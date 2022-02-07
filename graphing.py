@@ -70,7 +70,7 @@ def priceRarityGraph(asset_df, asset_rarities, slug, floor):
 
     label_point(nonfloor_filtered_result["price"], nonfloor_filtered_result["rarity"], nonfloor_filtered_result["id"], plt.gca())  
     plt.tight_layout() # Add space at top
-    plt.savefig("current_plot.png")
+    plt.savefig("price_rarity_plot.png")
     plt.close()
 
     return

@@ -1,14 +1,46 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def floorDepthCalc(floor, asset_df):
     """
-    Output: The number (and value) of items currently listed at a price below 1.5x the current floor  (i.e. how many floor items traded it would take to raise the floor price by 50% and their total value in ETH).
+    Output: The number (and value) of items currently listed at a price below X and the current floor  (i.e. how many floor items traded it would take to raise the floor price by Y% and their total value in ETH).
     """
-    floor15 = float(floor * 1.5)
-    floor_depth = len(asset_df[asset_df['Current Price'] <= floor15].reset_index())
-    return floor_depth
+    floor2 = float(floor * 1.2)
+    floor4 = float(floor * 1.4)
+    floor6 = float(floor * 1.6)
+    floor8 = float(floor * 1.8)
+    floor10 = float(floor * 2)
+    floor_val_arr = [floor2, floor4, floor6, floor8, floor10]
+    floor_depth = len(asset_df[asset_df['Current Price'] == floor].reset_index())
+    floor_depth2 = len(asset_df[asset_df['Current Price'] <= floor2].reset_index())
+    floor_depth4 = len(asset_df[asset_df['Current Price'] <= floor4].reset_index())
+    floor_depth6 = len(asset_df[asset_df['Current Price'] <= floor6].reset_index())
+    floor_depth8 = len(asset_df[asset_df['Current Price'] <= floor8].reset_index())
+    floor_depth10 = len(asset_df[asset_df['Current Price'] <= floor10].reset_index())
+    floor_depth_arr = [floor_depth, floor_depth2, floor_depth4, floor_depth6, floor_depth8, floor_depth10]
+    return floor_val_arr, floor_depth_arr
 
-def passionIntensityCalc(floor, asset_df):
+def plotFloorDepth(floor_val_arr, floor_depth_arr, slug):
+    
+    x_axis = ["floor", "1.2x", "1.4x", "1.6x", "1.8x", "2.0x"]
+    fig = plt.figure(figsize=(24,16))
+    ax = fig.add_subplot(111)
+    ax = plt.bar(x_axis, 
+                floor_depth_arr, 
+                color ='maroon',
+                width = 0.4)
+
+    plt.suptitle(f"Cumulative Floor Depths for {slug}", fontsize=18) #title
+    ax.set(xlabel='Upper Bound', ylabel='# of Items')
+
+    plt.tight_layout() # Add space at top
+    plt.savefig("floor_depth_chart.png")
+    plt.close()
+
+    return
+
+def inTheMoney(floor, asset_df):
     """
     Output: The percentage of items currently listed for sale that would be priced at a gain if listed at the current floor price (i.e. the floor price of the collection is higher than the item’s last traded price). 
     """
@@ -17,7 +49,7 @@ def passionIntensityCalc(floor, asset_df):
     passionate_score = round(((len(passionate_items) / len(asset_df)) * 100), 2) 
     return passionate_score
 
-def sentimentScoreCalc(floor, asset_df):
+def pricedAtGain(floor, asset_df):
     """
     Output: The percentage of items currently listed for sale that are priced at a gain (i.e. the list price of an item is higher than its last traded price).
     """
