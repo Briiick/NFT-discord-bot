@@ -6,7 +6,7 @@ import seaborn as sns
 
 os.environ['MPLCONFIGDIR'] = '/tmp'
 
-def rarityScoring(asset_data, slug):
+def rarityScoring(asset_data, total_tokens, slug):
     """
     Output: Rarity of each item.
     """
@@ -14,10 +14,11 @@ def rarityScoring(asset_data, slug):
 
     for asset in asset_data['assets']:
         asset_rarity = 1
-
+        
         for trait in asset['traits']:
-            
-            trait_rarity = 1 / (trait['trait_count'] / len(asset_data['assets']))
+            if trait['trait_count'] == 0:
+                continue
+            trait_rarity = 1 / (trait['trait_count'] / total_tokens)
             asset_rarity += trait_rarity
 
         asset_rarities.append({

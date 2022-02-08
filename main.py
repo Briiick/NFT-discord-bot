@@ -1,4 +1,5 @@
 # import libraries
+from pkgutil import iter_modules
 import pandas as pd
 import os
 import numpy as np
@@ -83,7 +84,7 @@ async def on_message(message):
             await message.channel.send(f"**{slug} items priced at a gain = {sentiment_score}%**")
             
             ### PRICERARITYGRAPH
-            asset_rarities = rarityScoring(asset_data, slug)
+            asset_rarities = rarityScoring(asset_data, total_tokens, slug)
             priceRarityGraph(asset_df, asset_rarities, slug, floor)
             await message.channel.send(file=discord.File('price_rarity_plot.png'))
 

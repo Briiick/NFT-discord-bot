@@ -48,6 +48,13 @@ def getOneAssetData(slug, total_supply):
             time.sleep(10)
             r = requests.get('https://api.opensea.io/api/v1/assets', params=params, headers=headers)
             response_json = r.json()
+            
+        except:
+            print(r)
+            print("Bizarre error. Trying again with more time.")
+            time.sleep(20)
+            r = requests.get('https://api.opensea.io/api/v1/assets', params=params, headers=headers)
+            response_json = r.json()
 
         # store asset data for rarity
         asset_data['assets'].extend(response_json['assets'])
