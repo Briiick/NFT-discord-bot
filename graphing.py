@@ -62,8 +62,8 @@ def priceRarityGraph(asset_df, asset_rarities, slug, floor):
                     height= 8,
                     aspect= 2 )
 
-    plt.suptitle(f"Price to Rarity Scores of {slug}", fontsize=18) #title
-    ax.set(xlabel='Price', ylabel='Rarity Score')
+    plt.suptitle(f"Price to Rarity Scores of {slug}", fontsize=20) #title
+    ax.set(xlabel='Price', ylabel='Rarity Score', fontsize = 16)
 
     def label_point(x, y, val, ax):
         a = pd.concat({'x': x, 'y': y, 'val': val}, axis=1)
@@ -72,6 +72,7 @@ def priceRarityGraph(asset_df, asset_rarities, slug, floor):
 
     label_point(nonfloor_filtered_result["price"], nonfloor_filtered_result["rarity"], nonfloor_filtered_result["id"], plt.gca())  
     plt.tight_layout() # Add space at top
+    plt.grid()
     plt.savefig("price_rarity_plot.png")
     plt.close()
 

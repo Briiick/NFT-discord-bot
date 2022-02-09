@@ -22,18 +22,25 @@ def floorDepthCalc(floor, asset_df):
     return floor_val_arr, floor_depth_arr
 
 def plotFloorDepth(floor_val_arr, floor_depth_arr, slug):
-    
+    """Plot the floor depth in range.
+
+    Args:
+        floor_val_arr ([type]): [description]
+        floor_depth_arr ([type]): [description]
+        slug ([type]): [description]
+    """
     x_axis = ["floor", "1.2x", "1.4x", "1.6x", "1.8x", "2.0x"]
     plt.figure(figsize=(24,16))
     plt.bar(x_axis, 
-                floor_depth_arr, 
-                color ='maroon',
-                width = 0.4)
+            floor_depth_arr, 
+            color ='maroon',
+            width = 0.4)
 
-    plt.xlabel("Floor Upper Bound")
-    plt.ylabel("# of Items")
-    plt.title("Cumulative Floor Depths for {slug}", fontsize=18)
+    plt.xlabel("Floor Upper Bound", fontsize=16)
+    plt.ylabel("# of Items", fontsize=16)
+    plt.title(f"Cumulative Floor Depths for {slug}", fontsize=20)
     plt.tight_layout() # Add space at top
+    plt.grid()
     plt.savefig("floor_depth_chart.png")
     plt.close()
 
