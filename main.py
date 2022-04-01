@@ -8,6 +8,7 @@ from scrape_assets import getOneAssetData
 from scrape_collection import collectionStatsQuery
 from kpi_calculations import floorDepthCalc, inTheMoney, pricedAtGain, plotFloorDepth
 from graphing import rarityScoring, priceRarityGraph
+from discord_req import discordUserQuery
 import matplotlib.pyplot as plt
 from dotenv import load_dotenv
 import logging
@@ -29,34 +30,56 @@ load_dotenv(".env")
 # set up discord client
 client = discord.Client()
 
-
+# when client is ready, output message.
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
 
 
+# check message
 @client.event
 async def on_message(message):
+    """
+    Function to run when a message is sent.
+
+    Args:
+        message - the message sent
+    Outputs help or analysis based upon message send (!scan or !help).
+    """
     if message.author == client.user:
         return
-
+    
+    # take content of message
     msg = message.content
-
+    
+    # check beginning of message
     if msg.startswith('!scan'):
-        slug = msg[6:]
+        slug = msg[6:] # parse everything after !scan
         
         ### GATHER DATA
         await message.channel.send(f"**Gathering collection data for {slug}.**")
-        collection_df = collectionStatsQuery(slug)
-        if collection_df.empty:
-            await message.channel.send(f"{slug} Not found on OpenSea.")
+        collection_df, discord_url = collectionStatsQuery(slug) # get collection data
+        if collection_df.empty: # if it's empty then something went wrong.
+            await message.channel.send(f"{slug} Not found on OpenSea. Check the slug and resubmit.")
         else:
             await message.channel.send(f"Link to collection: https://opensea.io/collection/{slug}")
             await message.channel.send(f"Collection details: \n")
+            
+            ### output collection details to discord across rows
             for i, j in collection_df.iterrows():
                 await message.channel.send(f"{i}, {j} \n")
+                
+            ### DISCORD NUMBER OF USERS
+            try:
+                discord_num_users = discordUserQuery(discord_url)
+                await message.channel.send(f"**Number of Discord users = {discord_num_users}**")
+            except:
+                pass
+            
+            # gather total tokens
             total_tokens = int(collection_df['total_supply'])
             await message.channel.send(f"**Gathering asset data for {slug}.**")
+            # tell how long will take
             if total_tokens <= 10000:
                 await message.channel.send(f"There are {total_tokens} assets to query. This won't take too long.")
             elif 10000 < total_tokens <= 20000:
@@ -65,16 +88,18 @@ async def on_message(message):
                 await message.channel.send(f"There are {total_tokens} assets to query. This will take 10-20 minutes.")
             else:
                 await message.channel.send(f"There are {total_tokens} assets to query. This is a lot of assets. This will take a while.")
+            # get asset data
             asset_df, asset_data = getOneAssetData(slug, total_tokens)
+            #print(len(asset_df))
 
             ### CALCULATE FLOOR
             floor = float(collection_df[collection_df['collection_name'] == slug]['floor_price'])
             
-            ### FLOOR DEPTH
-            floor_val_arr, floor_depth_arr = floorDepthCalc(floor, asset_df)
-            plotFloorDepth(floor_val_arr, floor_depth_arr, slug)
-            await message.channel.send(file=discord.File('floor_depth_chart.png'))
-
+            ### HOLDER-TO-ITEM RATIO
+            holder_to_item = round(float(collection_df['num_owners'] / total_tokens), 2)
+            number_owners = int(collection_df['num_owners'])
+            await message.channel.send(f"Holders-to-items ratio: {number_owners}/{total_tokens} = {holder_to_item}")
+            
             ### PASSION INTENSITY
             passion_intensity = inTheMoney(floor, asset_df)
             await message.channel.send(f"**{slug} owners in the money = {passion_intensity}%**")
@@ -83,10 +108,15 @@ async def on_message(message):
             sentiment_score = pricedAtGain(floor, asset_df)
             await message.channel.send(f"**{slug} items priced at a gain = {sentiment_score}%**")
             
+            ### FLOOR DEPTH
+            floor_val_arr, floor_depth_arr = floorDepthCalc(floor, asset_df)
+            plotFloorDepth(floor_val_arr, floor_depth_arr, slug)
+            await message.channel.send(file=discord.File('temp_plots/floor_depth_chart.png'))
+
             ### PRICERARITYGRAPH
             asset_rarities = rarityScoring(asset_data, total_tokens, slug)
             priceRarityGraph(asset_df, asset_rarities, slug, floor)
-            await message.channel.send(file=discord.File('price_rarity_plot.png'))
+            await message.channel.send(file=discord.File('temp_plots/price_rarity_plot.png'))
 
             await message.channel.send(f"Note, if you want to understand these metrics, type **!help**")
             
@@ -96,7 +126,7 @@ async def on_message(message):
 Type !scan <end of OpenSea URL> to get started. \n\
 \n\
 ***KPI info:*** \n\
-**Floor Depth:** The number of items currently listed at a price below X and the current floor  (i.e. how many floor items traded it would take to raise the floor price by X%). This KPI indicates how much upward price resistance exists for a given collection – the thinner the floor, the easier the upward motion. \n\
+**Floor depth:** The number of items currently listed at a price below X and the current floor  (i.e. how many floor items traded it would take to raise the floor price by X%). This KPI indicates how much upward price resistance exists for a given collection – the thinner the floor, the easier the upward motion. \n\
 \n\
 **Owners in the money:** The percentage of items currently listed for sale that would make money if listed at the current floor price (i.e. the floor price of the collection is higher than the item’s last traded price). This KPI indicates conviction – how many people are selling off their NFTs now that they have made money vs. holding for future. The higher the percentage, the less conviction. \n\
 \n\

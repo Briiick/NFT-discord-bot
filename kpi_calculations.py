@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+plt.rcParams.update({'font.size': 22})
 
 def floorDepthCalc(floor, asset_df):
     """
@@ -22,13 +23,16 @@ def floorDepthCalc(floor, asset_df):
     return floor_val_arr, floor_depth_arr
 
 def plotFloorDepth(floor_val_arr, floor_depth_arr, slug):
-    """Plot the floor depth in range.
+    """
+    Plot the floor depth in range.
 
     Args:
         floor_val_arr ([type]): [description]
         floor_depth_arr ([type]): [description]
         slug ([type]): [description]
     """
+    
+    plt.rcParams['font.size'] = '16'
     x_axis = ["floor", "1.2x", "1.4x", "1.6x", "1.8x", "2.0x"]
     plt.figure(figsize=(24,16))
     plt.bar(x_axis, 
@@ -36,12 +40,14 @@ def plotFloorDepth(floor_val_arr, floor_depth_arr, slug):
             color ='maroon',
             width = 0.4)
 
-    plt.xlabel("Floor Upper Bound", fontsize=16)
-    plt.ylabel("# of Items", fontsize=16)
-    plt.title(f"Cumulative Floor Depths for {slug}", fontsize=20)
+    plt.xlabel("Floor Upper Bound", fontsize=20)
+    plt.ylabel("# of Items", fontsize=20)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.title(f"Cumulative Floor Depths for {slug}", fontsize=30)
     plt.tight_layout() # Add space at top
     plt.grid()
-    plt.savefig("floor_depth_chart.png")
+    plt.savefig("temp_plots/floor_depth_chart.png")
     plt.close()
 
     return

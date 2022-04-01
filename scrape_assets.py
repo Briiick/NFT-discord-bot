@@ -33,7 +33,8 @@ def getOneAssetData(slug, total_supply):
             'order_by': 'sale_count',
             'order_direction': 'asc',
             'offset': offset,
-            'limit': 50
+            'limit': 50,
+            'include_orders': True
         }
         try:
             # query the assets
@@ -41,6 +42,9 @@ def getOneAssetData(slug, total_supply):
                             params=params,
                             headers=headers)
             response_json = r.json()
+            if not response_json:
+                print("Error. Printing response.json:")
+                print(response_json)
           
         except KeyError:
             print(r)
@@ -56,8 +60,17 @@ def getOneAssetData(slug, total_supply):
             r = requests.get('https://api.opensea.io/api/v1/assets', params=params, headers=headers)
             response_json = r.json()
 
-        # store asset data for rarity
-        asset_data['assets'].extend(response_json['assets'])
+        try:
+            # store asset data for rarity
+            asset_data['assets'].extend(response_json['assets'])
+        except:
+            print(r)
+            print("Throttled. Trying again with more time.")
+            time.sleep(10)
+            r = requests.get('https://api.opensea.io/api/v1/assets', params=params, headers=headers)
+            response_json = r.json()
+            # store asset data for rarity
+            asset_data['assets'].extend(response_json['assets'])
 
         # for dataframe of values
         id_list = []
