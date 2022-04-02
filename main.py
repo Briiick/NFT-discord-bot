@@ -13,7 +13,7 @@ from discord_req import discordUserQuery
 import matplotlib.pyplot as plt
 from dotenv import load_dotenv
 import logging
-import dataframe_image as dfi
+#import dataframe_image as dfi
 
 # SET UP LOGGER
 logger = logging.getLogger('discord')
@@ -70,7 +70,7 @@ async def on_message(message):
             ### output collection details to discord across rows
             # collection_df transpose
             collection_df_t = collection_df.T
-            dfi.export(collection_df_t, 'dataframe_images/collection_stats.png')
+            #dfi.export(collection_df_t, 'dataframe_images/collection_stats.png')
             await message.channel.send(collection_df_t.to_string(justify='center'))
                 
             ### DISCORD NUMBER OF USERS
@@ -129,11 +129,11 @@ async def on_message(message):
             await message.channel.send(f"There are %d unique {slug} buyers." % len(transaction_df['buyer_address'].unique()))
             # top buyers and sellers
             buyer_df = buyersellerCalc(transaction_df, buyer=True)
-            dfi.export(buyer_df, 'dataframe_images/buyer_df.png')
+            #dfi.export(buyer_df, 'dataframe_images/buyer_df.png')
             await message.channel.send(f"**The top {slug} buyers are:**")
             await message.channel.send(buyer_df.to_string())
             seller_df = buyersellerCalc(transaction_df, buyer=False)
-            dfi.export(seller_df, 'dataframe_images/seller_df.png')
+            #dfi.export(seller_df, 'dataframe_images/seller_df.png')
             await message.channel.send(f"**The top {slug} sellers are**:")
             await message.channel.send(seller_df.to_string())
             
