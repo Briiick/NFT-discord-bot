@@ -6,12 +6,14 @@ import numpy as np
 import discord
 from scrape_assets import getOneAssetData
 from scrape_collection import collectionStatsQuery
-from kpi_calculations import floorDepthCalc, inTheMoney, pricedAtGain, plotFloorDepth
-from graphing import rarityScoring, priceRarityGraph
+from scrape_events import eventQuery
+from kpi_calculations import floorDepthCalc, inTheMoney, pricedAtGain, buyersellerCalc
+from graphing import rarityScoring, plotFloorDepth, priceRarityGraph, plotTransactionVolume, plotTransactionSalesETH, plotAvgPrices, plotFloorPrices, plotMaxPrices
 from discord_req import discordUserQuery
 import matplotlib.pyplot as plt
 from dotenv import load_dotenv
 import logging
+import dataframe_image as dfi
 
 # SET UP LOGGER
 logger = logging.getLogger('discord')
@@ -66,8 +68,10 @@ async def on_message(message):
             await message.channel.send(f"Collection details: \n")
             
             ### output collection details to discord across rows
-            for i, j in collection_df.iterrows():
-                await message.channel.send(f"{i}, {j} \n")
+            # collection_df transpose
+            collection_df_t = collection_df.T
+            dfi.export(collection_df_t, 'dataframe_images/collection_stats.png')
+            await message.channel.send(collection_df_t.to_string(justify='center'))
                 
             ### DISCORD NUMBER OF USERS
             try:
@@ -78,7 +82,7 @@ async def on_message(message):
             
             # gather total tokens
             total_tokens = int(collection_df['total_supply'])
-            await message.channel.send(f"**Gathering asset data for {slug}.**")
+            await message.channel.send(f"**Gathering asset data for {slug}...**")
             # tell how long will take
             if total_tokens <= 10000:
                 await message.channel.send(f"There are {total_tokens} assets to query. This won't take too long.")
@@ -117,6 +121,38 @@ async def on_message(message):
             asset_rarities = rarityScoring(asset_data, total_tokens, slug)
             priceRarityGraph(asset_df, asset_rarities, slug, floor)
             await message.channel.send(file=discord.File('temp_plots/price_rarity_plot.png'))
+            
+            ### TRANSACTION GRAPHS
+            await message.channel.send(f"**Gathering 30-day trailing transaction data for {slug}...**")
+            transaction_df = eventQuery(slug)
+            await message.channel.send(f"There are %d unique {slug} sellers." % len(transaction_df['seller_address'].unique()))
+            await message.channel.send(f"There are %d unique {slug} buyers." % len(transaction_df['buyer_address'].unique()))
+            # top buyers and sellers
+            buyer_df = buyersellerCalc(transaction_df, buyer=True)
+            dfi.export(buyer_df, 'dataframe_images/buyer_df.png')
+            await message.channel.send(f"**The top {slug} buyers are:**")
+            await message.channel.send(buyer_df.to_string())
+            seller_df = buyersellerCalc(transaction_df, buyer=False)
+            dfi.export(seller_df, 'dataframe_images/seller_df.png')
+            await message.channel.send(f"**The top {slug} sellers are**:")
+            await message.channel.send(seller_df.to_string())
+            
+            # transaction volume
+            plotTransactionVolume(transaction_df, slug)
+            await message.channel.send(file=discord.File('temp_plots/transaction_history.png'))
+            # transaction sales ETH
+            plotTransactionSalesETH(transaction_df, slug)
+            await message.channel.send(file=discord.File('temp_plots/transaction_sales_eth.png'))
+            # average prices ETH
+            plotAvgPrices(transaction_df, slug)
+            await message.channel.send(file=discord.File('temp_plots/avg_prices.png'))
+            # floor prices ETH
+            plotFloorPrices(transaction_df, slug)
+            await message.channel.send(file=discord.File('temp_plots/floor_prices.png'))
+            # max prices ETH
+            plotMaxPrices(transaction_df, slug)
+            await message.channel.send(file=discord.File('temp_plots/max_prices.png'))
+            
 
             await message.channel.send(f"Note, if you want to understand these metrics, type **!help**")
             

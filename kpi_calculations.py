@@ -1,10 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-plt.rcParams.update({'font.size': 22})
 
 def floorDepthCalc(floor, asset_df):
     """
+    Input: The floor price of the collection and the asset information.
     Output: The number (and value) of items currently listed at a price below X and the current floor  (i.e. how many floor items traded it would take to raise the floor price by Y% and their total value in ETH).
     """
     floor2 = float(floor * 1.2)
@@ -21,36 +21,6 @@ def floorDepthCalc(floor, asset_df):
     floor_depth10 = len(asset_df[asset_df['Current Price'] <= floor10].reset_index())
     floor_depth_arr = [floor_depth, floor_depth2, floor_depth4, floor_depth6, floor_depth8, floor_depth10]
     return floor_val_arr, floor_depth_arr
-
-def plotFloorDepth(floor_val_arr, floor_depth_arr, slug):
-    """
-    Plot the floor depth in range.
-
-    Args:
-        floor_val_arr ([type]): [description]
-        floor_depth_arr ([type]): [description]
-        slug ([type]): [description]
-    """
-    
-    plt.rcParams['font.size'] = '16'
-    x_axis = ["floor", "1.2x", "1.4x", "1.6x", "1.8x", "2.0x"]
-    plt.figure(figsize=(24,16))
-    plt.bar(x_axis, 
-            floor_depth_arr, 
-            color ='maroon',
-            width = 0.4)
-
-    plt.xlabel("Floor Upper Bound", fontsize=20)
-    plt.ylabel("# of Items", fontsize=20)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    plt.title(f"Cumulative Floor Depths for {slug}", fontsize=30)
-    plt.tight_layout() # Add space at top
-    plt.grid()
-    plt.savefig("temp_plots/floor_depth_chart.png")
-    plt.close()
-
-    return
 
 def inTheMoney(floor, asset_df):
     """
@@ -69,3 +39,26 @@ def pricedAtGain(floor, asset_df):
     sentiment_items = sentiment_items[sentiment_items['Current Price'] >= floor]
     sentiment_score = round(((len(sentiment_items) / len(asset_df)) * 100), 2) 
     return sentiment_score
+
+def buyersellerCalc(df, buyer):
+    if buyer == True:
+        query_string = 'buyer_address'
+    else:
+        query_string = 'seller_address'
+    storage = []
+    for address in df[query_string].value_counts().index[:10]:
+        data = {}
+        data[query_string] = address
+        if buyer == True:
+            data['buyer_username'] = df[df[query_string] == address]['buyer_username'].iloc[0]
+            data['number_buys'] = len(df[df[query_string] == address])
+        else:
+            data['seller_username'] = df[df[query_string] == address]['seller_username'].iloc[0]
+            data['number_sales'] = len(df[df[query_string] == address])
+        data['min_price'] = df[df[query_string] == address]['total_price'].min()
+        data['max_price'] = df[df[query_string] == address]['total_price'].max()
+        data['mean_price'] = df[df[query_string] == address]['total_price'].mean()
+        storage.append(data)
+    
+    return pd.DataFrame(storage)
+    

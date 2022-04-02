@@ -15,12 +15,14 @@ headers = {"X-API-KEY": my_key}
 
 ### Get asset data
 def getOneAssetData(slug, total_supply):
-
-    # iterate through and collect:
+    """
+    Iterate through collection and collect:
     ### item ids
     ### current price of those listed
     ### previous price of those listed
     ### image url
+    """
+    
     offset = 0
     df_store = pd.DataFrame(columns=['ID', 'Current Price', 'Previous Price', 'URL'])
     asset_data = {'assets': []}
