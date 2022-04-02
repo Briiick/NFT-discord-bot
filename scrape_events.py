@@ -72,10 +72,13 @@ def eventQuery(slug):
     Args:
         slug (str): the slug of the collection for OpenSea
     """
-
-    start_date = datetime.datetime.now() - datetime.timedelta(30)
+    time_now = datetime.datetime.now()
+    print(f"Current time: {time_now}")
+    start_date = time_now - datetime.timedelta(30)
+    print(f"Start date of query: {start_date}")
     # displaying unix timestamp after conversion
     start_date_unix = time.mktime(start_date.timetuple())
+    print(f"Start date in unix: {start_date_unix}")
     offset = 0
     
     df_store = pd.DataFrame(columns=['is_bundle', 'id', 'seller_address', 'buyer_address',
@@ -126,13 +129,15 @@ def eventQuery(slug):
         
         if len(sales) < 20:
             break
+        if offset > 10000:
+            break
         next_offset = offset + 20
         print(f"Scraping {slug} items {offset} to {next_offset}")
         
         offset += 20
         
         time.sleep(0.2)
-    
+        
     # primarily from http://adilmoujahid.com/posts/2021/06/data-mining-meebits-nfts-python-opensea/
     # parse out bundles
     df_store = df_store[(df_store['payment_token'] != 'USDC') & (df_store['is_bundle'] == False)].copy()
