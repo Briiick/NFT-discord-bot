@@ -60,7 +60,7 @@ def plotFloorDepth(floor_val_arr, floor_depth_arr, slug):
             color ='maroon',
             width = 0.4)
 
-    plt.xlabel("Floor Upper Bound", fontsize=axis_size)
+    plt.xlabel("Depth Upper Bound (multiple of floor)", fontsize=axis_size)
     plt.ylabel("# of Items", fontsize=axis_size)
     plt.xticks(fontsize=18)
     plt.yticks(fontsize=18)

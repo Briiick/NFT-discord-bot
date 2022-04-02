@@ -76,9 +76,14 @@ async def on_message(message):
             ### DISCORD NUMBER OF USERS
             try:
                 discord_num_users = discordUserQuery(discord_url)
-                await message.channel.send(f"**Number of Discord users = {discord_num_users}**")
+                await message.channel.send(f"Number of Discord users = {discord_num_users}")
             except:
                 pass
+            
+            ### HOLDER-TO-ITEM RATIO
+            holder_to_item = round(float(collection_df['num_owners'] / total_tokens), 2)
+            number_owners = int(collection_df['num_owners'])
+            await message.channel.send(f"Holders-to-items ratio: {number_owners}/{total_tokens} = {holder_to_item}")
             
             # gather total tokens
             total_tokens = int(collection_df['total_supply'])
@@ -99,18 +104,13 @@ async def on_message(message):
             ### CALCULATE FLOOR
             floor = float(collection_df[collection_df['collection_name'] == slug]['floor_price'])
             
-            ### HOLDER-TO-ITEM RATIO
-            holder_to_item = round(float(collection_df['num_owners'] / total_tokens), 2)
-            number_owners = int(collection_df['num_owners'])
-            await message.channel.send(f"Holders-to-items ratio: {number_owners}/{total_tokens} = {holder_to_item}")
-            
             ### PASSION INTENSITY
             passion_intensity = inTheMoney(floor, asset_df)
-            await message.channel.send(f"**{slug} owners in the money = {passion_intensity}%**")
+            await message.channel.send(f"{slug} owners in the money = {passion_intensity}%")
 
             ### SENTIMENT SCORE
             sentiment_score = pricedAtGain(floor, asset_df)
-            await message.channel.send(f"**{slug} items priced at a gain = {sentiment_score}%**")
+            await message.channel.send(f"{slug} items priced at a gain = {sentiment_score}%")
             
             ### FLOOR DEPTH
             floor_val_arr, floor_depth_arr = floorDepthCalc(floor, asset_df)
@@ -130,11 +130,11 @@ async def on_message(message):
             # top buyers and sellers
             buyer_df = buyersellerCalc(transaction_df, buyer=True)
             #dfi.export(buyer_df, 'dataframe_images/buyer_df.png')
-            await message.channel.send(f"**The top {slug} buyers are:**")
+            await message.channel.send(f"**The top {slug} buyers (30-day trailing) are:**")
             await message.channel.send(buyer_df.to_string())
             seller_df = buyersellerCalc(transaction_df, buyer=False)
             #dfi.export(seller_df, 'dataframe_images/seller_df.png')
-            await message.channel.send(f"**The top {slug} sellers are**:")
+            await message.channel.send(f"**The top {slug} sellers (30-day trailing) are**:")
             await message.channel.send(seller_df.to_string())
             
             # transaction volume
