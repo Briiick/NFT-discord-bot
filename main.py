@@ -80,13 +80,14 @@ async def on_message(message):
             except:
                 pass
             
+            # gather total tokens
+            total_tokens = int(collection_df['total_supply'])
+            
             ### HOLDER-TO-ITEM RATIO
             holder_to_item = round(float(collection_df['num_owners'] / total_tokens), 2)
             number_owners = int(collection_df['num_owners'])
             await message.channel.send(f"Holders-to-items ratio: {number_owners}/{total_tokens} = {holder_to_item}")
             
-            # gather total tokens
-            total_tokens = int(collection_df['total_supply'])
             await message.channel.send(f"**Gathering asset data for {slug}...**")
             # tell how long will take
             if total_tokens <= 10000:
