@@ -25,16 +25,18 @@ def parse_sale_data(sale_dict):
     
     is_bundle = False
 
+    # check sales
     if sale_dict['asset'] != None:
         id = sale_dict['asset']['token_id']
     elif sale_dict['asset_bundle'] != None:
         id = [asset['token_id'] for asset in sale_dict['asset_bundle']['assets']]
         is_bundle = True
     
-    
+    # assign addresses
     seller_address = sale_dict['seller']['address']
     buyer_address = sale_dict['winner_account']['address']
     
+    # check for usernames
     try:
         seller_username = sale_dict['seller']['user']['username']
     except:
@@ -50,7 +52,7 @@ def parse_sale_data(sale_dict):
     usd_price = float(sale_dict['payment_token']['usd_price'])
     transaction_hash = sale_dict['transaction']['transaction_hash']
     
-
+    # assign to dictionary
     result = {'is_bundle': is_bundle,
               'id': id,
               'seller_address': seller_address,
@@ -80,13 +82,14 @@ def eventQuery(slug):
     start_date_unix = time.mktime(start_date.timetuple())
     print(f"Start date in unix: {start_date_unix}")
     offset = 0
-    
+    # df for storing results
     df_store = pd.DataFrame(columns=['is_bundle', 'id', 'seller_address', 'buyer_address',
                                      'buyer_username', 'seller_username', 'timestamp',
                                      'total_price', 'payment_token', 'usd_price', 'transaction_hash'])
     first = True
     next_page = 0
     while True:
+        # dont use 'cursor' parameter if first run
         if first == True:
             params = {
                     'collection_slug': slug,
@@ -109,7 +112,8 @@ def eventQuery(slug):
                                     params=params,
                                     headers=headers)
             response_json = r.json()
-            
+        
+        # if we get a throttled response, wait and try again
         except:
             print(r)
             print("Throttled. Trying again with more time.")
@@ -127,10 +131,13 @@ def eventQuery(slug):
         temp_df = pd.DataFrame(parsed_sales)
         df_store = pd.concat([df_store, temp_df])
         
+        # set break conditions
+        print(f"Length of accessed data: {len(sales)}")
         if len(sales) < 20:
             break
-        if offset > 10000:
+        if offset > 2000:
             break
+        # way of tracking iterations
         next_offset = offset + 20
         print(f"Scraping {slug} items {offset} to {next_offset}")
         
