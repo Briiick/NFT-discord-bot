@@ -197,12 +197,6 @@ def plotTransactionSalesETH(df, slug):
     ax.set_xlabel("Date", fontsize=axis_size, fontweight='bold')
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)  
-    
-    #https://github.com/pandas-dev/pandas/issues/1918
-    plt.gca().xaxis.set_major_formatter(plt.FixedFormatter(data.index.to_series().dt.strftime("%d %b")))
-    
-    for label in ax.get_xticklabels(which='major'):
-        label.set(rotation=30, horizontalalignment='right', fontsize=18)
 
     dates = list(data.index)
     values = list(data.values)
@@ -210,6 +204,9 @@ def plotTransactionSalesETH(df, slug):
     for i, j in zip(dates, values):
         text = np.round(j, 2)
         ax.annotate(f"{text}", xy=(i, j), rotation=45, fontsize=18)
+    
+    for label in ax.get_xticklabels(which='both'):
+        label.set(rotation=30, horizontalalignment='right', fontsize=18)
     
     plt.savefig("temp_plots/transaction_sales_eth.png")
     plt.close()
@@ -229,12 +226,6 @@ def plotAvgPrices(df, slug):
     ax.set_xlabel("Date", fontsize=axis_size, fontweight='bold')
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)  
-    
-    #https://github.com/pandas-dev/pandas/issues/1918
-    plt.gca().xaxis.set_major_formatter(plt.FixedFormatter(data.index.to_series().dt.strftime("%d %b")))
-    
-    for label in ax.get_xticklabels(which='major'):
-        label.set(rotation=30, horizontalalignment='right', fontsize=18)
 
     dates = list(data.index)
     values = list(data.values)
@@ -242,6 +233,9 @@ def plotAvgPrices(df, slug):
     for i, j in zip(dates, values):
         text = np.round(j, 2)
         ax.annotate(f"{text}".format(), xy=(i, j), rotation=45, fontsize=18)
+        
+    for label in ax.get_xticklabels(which='both'):
+        label.set(rotation=30, horizontalalignment='right', fontsize=18)
         
     plt.savefig("temp_plots/avg_prices.png")
     plt.close()
@@ -260,12 +254,6 @@ def plotFloorPrices(df, slug):
     ax.set_xlabel("Date", fontsize=axis_size, fontweight='bold')
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)  
-    
-    #https://github.com/pandas-dev/pandas/issues/1918
-    plt.gca().xaxis.set_major_formatter(plt.FixedFormatter(data.index.to_series().dt.strftime("%d %b")))
-    
-    for label in ax.get_xticklabels(which='major'):
-        label.set(rotation=30, horizontalalignment='right', fontsize=18)
 
     dates = list(data.index)
     values = list(data.values)
@@ -273,6 +261,9 @@ def plotFloorPrices(df, slug):
     for d, v in zip(dates, values):
         text = np.round(v, 2)
         ax.annotate(f"{text}", xy=(d, v), rotation=45, fontsize=18)
+    
+    for label in ax.get_xticklabels(which='both'):
+        label.set(rotation=30, horizontalalignment='right', fontsize=18)
     
     plt.savefig("temp_plots/floor_prices.png")
     plt.close()
@@ -293,12 +284,6 @@ def plotMaxPrices(df, slug):
     ax.set_xlabel("Date", fontsize=axis_size, fontweight='bold')
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)  
-    
-    #https://github.com/pandas-dev/pandas/issues/1918
-    plt.gca().xaxis.set_major_formatter(plt.FixedFormatter(data.index.to_series().dt.strftime("%d %b")))
-    
-    for label in ax.get_xticklabels(which='major'):
-        label.set(rotation=30, horizontalalignment='right', fontsize=18)
 
     dates = list(data.index)
     values = list(data.values)
@@ -306,6 +291,9 @@ def plotMaxPrices(df, slug):
     for i, j in zip(dates, values):
         text = np.round(j, 2)
         ax.annotate(f"{text}", xy=(i, j), rotation=45, fontsize=18)
+        
+    for label in ax.get_xticklabels(which='both'):
+        label.set(rotation=30, horizontalalignment='right', fontsize=18)
     
     plt.savefig("temp_plots/max_prices.png")
     plt.close()
