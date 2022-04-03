@@ -62,8 +62,8 @@ def plotFloorDepth(floor_val_arr, floor_depth_arr, slug):
 
     plt.xlabel("Depth Upper Bound (multiple of floor)", fontsize=axis_size)
     plt.ylabel("# of Items", fontsize=axis_size)
-    plt.xticks(fontsize=18)
-    plt.yticks(fontsize=18)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
     plt.title(f"Cumulative Floor Depths for {slug}", fontsize=plot_title_size)
     plt.tight_layout() # Add space at top
     plt.grid()
@@ -128,10 +128,12 @@ def priceRarityGraph(asset_df, asset_rarities, slug, floor):
     def label_point(x, y, val, ax):
         a = pd.concat({'x': x, 'y': y, 'val': val}, axis=1)
         for i, point in a.iterrows():
-            ax.text(point['x']+.02, point['y'], str(point['val']), fontsize=14)
+            ax.text(point['x']+.02, point['y'], str(point['val']), fontsize=18)
 
     # call label function
-    label_point(nonfloor_filtered_result["price"], nonfloor_filtered_result["rarity"], nonfloor_filtered_result["id"], plt.gca())  
+    label_point(nonfloor_filtered_result["price"], nonfloor_filtered_result["rarity"], nonfloor_filtered_result["id"], plt.gca())
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)  
     plt.tight_layout() # Add space at top
     plt.grid()
     plt.savefig("temp_plots/price_rarity_plot.png")
@@ -157,6 +159,8 @@ def plotTransactionVolume(df, slug):
     ax.set_title(f"30-day Trailing Number of {slug} Sales Per Day ", fontsize=plot_title_size)
     ax.set_ylabel(f"Number of {slug} Sales", fontsize=axis_size, fontweight='bold')
     ax.set_xlabel("Date", fontsize=axis_size, fontweight='bold')
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)  
 
     #https://github.com/pandas-dev/pandas/issues/1918
     plt.gca().xaxis.set_major_formatter(plt.FixedFormatter(data.index.to_series().dt.strftime("%d %b")))
@@ -165,7 +169,7 @@ def plotTransactionVolume(df, slug):
     for i in ax.patches:
         # get_x pulls left or right; get_height pushes up or down
         ax.text(i.get_x(), i.get_height()+1, \
-                str(round((i.get_height()), 2)), fontsize=14, color='black')
+                str(round((i.get_height()), 2)), fontsize=18, color='black')
     
     plt.savefig("temp_plots/transaction_history.png")
     plt.close()
@@ -188,6 +192,8 @@ def plotTransactionSalesETH(df, slug):
     ax.set_title(f"30-day Trailing Total {slug} Sales (ETH)", fontsize=plot_title_size)
     ax.set_ylabel("Sales in ETH", fontsize=axis_size, fontweight='bold')
     ax.set_xlabel("Date", fontsize=axis_size, fontweight='bold')
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)  
 
     dates = list(data.index)
     values = list(data.values)
@@ -212,6 +218,8 @@ def plotAvgPrices(df, slug):
     ax.set_title(f"30-day Trailing Average {slug} Price (ETH)", fontsize=plot_title_size)
     ax.set_ylabel("Average Price in ETH", fontsize=axis_size, fontweight='bold')
     ax.set_xlabel("Date", fontsize=axis_size, fontweight='bold')
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)  
 
     dates = list(data.index)
     values = list(data.values)
@@ -235,6 +243,8 @@ def plotFloorPrices(df, slug):
     ax.set_title(f"30-day Trailing Floor {slug} Price (ETH)", fontsize=plot_title_size)
     ax.set_ylabel("Floor Price in ETH", fontsize=axis_size, fontweight='bold')
     ax.set_xlabel("Date", fontsize=axis_size, fontweight='bold')
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)  
 
     dates = list(data.index)
     values = list(data.values)
@@ -260,6 +270,8 @@ def plotMaxPrices(df, slug):
     ax.set_title(f"30-day Trailing Max {slug} Price (ETH)", fontsize=plot_title_size)
     ax.set_ylabel("Max Price in ETH", fontsize=axis_size, fontweight='bold')
     ax.set_xlabel("Date", fontsize=axis_size, fontweight='bold')
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)  
 
     dates = list(data.index)
     values = list(data.values)
