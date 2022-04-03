@@ -162,7 +162,7 @@ async def on_message(message):
         await message.channel.send("***Commands:*** \n\
 Type !scan <end of OpenSea URL> to get started. \n\
 \n\
-***KPI info:*** \n\
+***KPI and Graph Info:*** \n\
 **Collection details**: Various up-front trading statistics for the collection. This includes one-day, seven-day, and thirty-day volume traded, average price, total sales, total supply, market cap, and floor price. This data is generally accessible on OpenSea’s website, so we only output it on the Discord bot or data dashboard for user convenience. Some of this data is leveraged in calculating other KPIs below. \n\
 \n\
 **Discord user count**: How many people are members of the project’s Discord channel. This measure should indicate community attraction (on Discord, the main platform for NFT communities), a critical ingredient of longer-term success. \n\
