@@ -163,10 +163,26 @@ async def on_message(message):
 Type !scan <end of OpenSea URL> to get started. \n\
 \n\
 ***KPI info:*** \n\
-**Floor depth:** The number of items currently listed at a price below X and the current floor  (i.e. how many floor items traded it would take to raise the floor price by X%). This KPI indicates how much upward price resistance exists for a given collection – the thinner the floor, the easier the upward motion. \n\
+**Collection details**: Various up-front trading statistics for the collection. This includes one-day, seven-day, and thirty-day volume traded, average price, total sales, total supply, market cap, and floor price. This data is generally accessible on OpenSea’s website, so we only output it on the Discord bot or data dashboard for user convenience. Some of this data is leveraged in calculating other KPIs below. \n\
 \n\
-**Owners in the money:** The percentage of items currently listed for sale that would make money if listed at the current floor price (i.e. the floor price of the collection is higher than the item’s last traded price). This KPI indicates conviction – how many people are selling off their NFTs now that they have made money vs. holding for future. The higher the percentage, the less conviction. \n\
+**Discord user count**: How many people are members of the project’s Discord channel. This measure should indicate community attraction (on Discord, the main platform for NFT communities), a critical ingredient of longer-term success. \n\
 \n\
-**Priced at a gain:** The percentage of items currently listed for sale that are priced at a gain (i.e. the list price of an item is higher than its last traded price). This KPI indicates the market’s current feelings about a collection – the higher the score, the more optimistic holders may be about being able to turn a profit.")
+**Holders-to-items ratio**: The number of unique wallet addresses expressed as a percentage of the number of assets in each collection (i.e., number of holders divided by number of assets). This measure should indicate some measure of decentralisation, which many take as an indicator that a collection is more/less immune to price manipulation. \n\
+\n\
+**Owners in the money**: The percentage of assets currently listed for sale that would be priced at a gain if listed at the current floor price (i.e., the floor price of the collection is higher than the asset’s last traded price). This measure should indicate the conviction of a collection’s current holders – if they can make money at floor price but are trying to sell for higher, then they are bullish their asset is worth more than floor. The higher the percentage, the less conviction. \n\
+\n\
+**Items priced at a gain**: The percentage of assets currently listed for sale that are priced at a gain (i.e., the list price of an asset is higher than its last traded price). This measure should indicate the market’s current feelings about a collection – the higher the score, the more optimistic holders may be about being able to turn a profit. \n\
+\n\
+**Floor depth and value**: The number (and value) of assets currently listed at a price below X and the current floor  (i.e. how many floor assets traded it would take to raise the floor price by X%). This KPI indicates how much upward price resistance exists for a given collection – the thinner the floor, the easier the upward motion. \n\
+\n\
+**Price-rarity ratio**: Analysis of the price against the rarity within a collection. This measure should provide more visibility into the best deals within a specific collection. Rarity evaluation is calculated via an algorithm similar to rarity.tools (rarity.Tools, 2021b). \n\
+\n\
+**Unique buyers & sellers (30-day trailing)**: The number of unique buyers and sellers in the last 30 days can provide more insight into the number of newcomers into the collection and how many different owners are selling. If the number of unique buyers is greater than sellers, it might indicate a trend of increased decentralised ownership over the project. \n\
+\n\
+**Top buyers & sellers (30-day trailing)**: Who the biggest buyers and sellers are for the collection most recently. Knowing the type of person buying or selling assets in the collection can provide more insight into the potential hype surrounding the project. Also, if few people are manipulating the price a lot, then the value of the NFTs could be artificially inflated/deflated (depending on few buyers/sellers). \n\
+\n\
+**Volume & value of sales (ETH) (30-day trailing)**: The volume (number of transactions) and total sales in ETH over the last 30 days. This graph is shown on OpenSea for every collection, so it is displayed here for convenience. It can demonstrate the historical trading trends and volatility of the collection. \n\
+\n\
+**Average, max, & floor price (ETH) (30-day trailing)**: Demonstrating the fluctuations in the average, max, and min prices that assets are being sold at over the last 30 days. This can provide more visibility into the price movements that have occurred, how volatile the price is, and what the trend has been recently.")
 
 client.run(os.getenv("TOKEN"))
